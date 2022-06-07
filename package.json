@@ -1,0 +1,29 @@
+{
+  "name": "js002-demo_blockchain_v1",
+  "version": "1.0.0",
+  "description": "Improved version of demo blockchain with some customization",
+  "main": "index.js",
+  "scripts": {
+    "dev-test": "nodemon dev-test.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yeungsammy2002/JS002-Demo_Blockchain_v1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yeungsammy2002/JS002-Demo_Blockchain_v1/issues"
+  },
+  "homepage": "https://github.com/yeungsammy2002/JS002-Demo_Blockchain_v1#readme",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "elliptic": "^6.5.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}

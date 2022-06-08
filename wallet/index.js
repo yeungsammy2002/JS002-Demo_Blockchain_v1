@@ -23,7 +23,10 @@ class Wallet {
       return;
     }
 
-    const tx = Tx.newTx(this, recip, amount);
+    let tx = txPool.getExistingTx(this.pubKey);
+    if (tx) tx.updateTx(this, recip, amount);
+    else tx = Tx.newTx(this, recip, amount);
+
     txPool.addTx(tx);
   }
 }

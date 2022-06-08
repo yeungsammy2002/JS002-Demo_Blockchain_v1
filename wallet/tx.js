@@ -7,11 +7,20 @@ class Tx {
     this.outputs = [];
   }
 
+  static newInput(senderW, outputs) {
+    return {
+      timestamp: Date.now(),
+      address: senderW.pubKey,
+      amount: senderW.bal,
+      signature: senderW.wallet.sign(ChainUtil.hash(outputs)),
+    };
+  }
+
   static newTx(senderW, recip, amount) {
     const tx = new this();
 
     // generate TXID
-    tx.txid = ChainUtil.gen_txid();
+    tx.txid = ChainUtil.genTxid();
 
     // create outputs
     if (senderW.bal < amount) {
@@ -19,19 +28,29 @@ class Tx {
       return;
     }
     tx.outputs = [
-      { address: recip, amount },
       { address: senderW.pubKey, amount: senderW.bal - amount },
+      { address: recip, amount },
     ];
 
     // create input and sign transaction
-    tx.input = {
-      timestamp: Date.now(),
-      address: senderW.pubKey,
-      amount: senderW.bal,
-      signature: senderW.wallet.sign(ChainUtil.hash(tx.outputs)),
-    };
+    tx.input = Tx.newInput(senderW, tx.outputs);
 
     return tx;
+  }
+
+  updateTx(senderW, recip, amount) {
+    const senderIdx = this.outputs.findIndex(
+      (o) => o.address === this.input.address
+    );
+    if (this.outputs[senderIdx].amount < amount) {
+      console.log("Insuffient balance.");
+      return;
+    }
+    this.outputs[senderIdx].amount -= amount;
+    this.outputs.push({ address: recip, amount });
+    this.input = Tx.newInput(senderW, this.outputs);
+
+    return this;
   }
 }
 

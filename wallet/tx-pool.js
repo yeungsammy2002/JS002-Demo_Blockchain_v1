@@ -4,7 +4,13 @@ class TxPool {
   }
 
   addTx(tx) {
-    this.pool.push(tx);
+    const idx = this.pool.findIndex((t) => t.txid === tx.txid);
+    if (idx > -1) this.pool[idx] = tx;
+    else this.pool.push(tx);
+  }
+
+  getExistingTx(address) {
+    return this.pool.find((t) => t.input.address === address);
   }
 }
 

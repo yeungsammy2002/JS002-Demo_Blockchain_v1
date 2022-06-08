@@ -4,8 +4,9 @@
   "description": "Improved version of demo blockchain with some customization",
   "main": "index.js",
   "scripts": {
-    "dev-test": "nodemon dev-test.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev-test": "nodemon dev-test",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./app"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "elliptic": "^6.5.4",
+    "express": "^4.18.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

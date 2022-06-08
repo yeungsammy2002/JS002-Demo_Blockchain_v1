@@ -10,8 +10,8 @@ class Tx {
   static newTx(senderW, recip, amount) {
     const tx = new this();
 
-    // get TXID
-    tx.txid = ChainUtil.get_txid();
+    // generate TXID
+    tx.txid = ChainUtil.gen_txid();
 
     // create outputs
     if (senderW.bal < amount) {
@@ -23,7 +23,7 @@ class Tx {
       { address: senderW.pubKey, amount: senderW.bal - amount },
     ];
 
-    // create input
+    // create input and sign transaction
     tx.input = {
       timestamp: Date.now(),
       address: senderW.pubKey,

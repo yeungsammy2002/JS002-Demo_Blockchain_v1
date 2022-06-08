@@ -1,4 +1,7 @@
 const ChainUtil = require("../chain-util");
+
+const Tx = require("./tx");
+
 const { INIT_BAL } = require("../config");
 
 class Wallet {
@@ -12,6 +15,16 @@ class Wallet {
     return `Wallet -
         Public Address: ${this.pubKey.toString()}
         Balance       : ${this.bal}`;
+  }
+
+  createTx(recip, amount, txPool) {
+    if (this.bal < amount) {
+      console.log("Insufficient balance.");
+      return;
+    }
+
+    const tx = Tx.newTx(this, recip, amount);
+    txPool.addTx(tx);
   }
 }
 

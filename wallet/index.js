@@ -24,7 +24,7 @@ class Wallet {
     }
 
     let tx = txPool.getExistingTx(this.pubKey);
-    if (tx) tx.updateTx(this, recip, amount);
+    if (tx) tx.update(this, recip, amount);
     else tx = Tx.newTx(this, recip, amount);
 
     txPool.addTx(tx);

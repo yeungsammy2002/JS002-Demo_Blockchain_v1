@@ -38,7 +38,7 @@ class Tx {
     return tx;
   }
 
-  updateTx(senderW, recip, amount) {
+  update(senderW, recip, amount) {
     const senderIdx = this.outputs.findIndex(
       (o) => o.address === this.input.address
     );

@@ -19,6 +19,13 @@ class TxPool {
       // .update() is defined in "Tx" module
     }
   }
+
+  getValidTxs() {
+    return this.pool.filter((t) => {
+      if (!Tx.verifyTx(t)) return;
+      return t;
+    });
+  }
 }
 
 module.exports = TxPool;

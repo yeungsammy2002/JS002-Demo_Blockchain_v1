@@ -13,6 +13,10 @@ class Util {
     return ec.genKeyPair();
   }
 
+  static verifySgn(pubKey, dataHash, sgn) {
+    return ec.keyFromPublic(pubKey, "hex").verify(dataHash, sgn);
+  }
+
   static hash(data) {
     return SHA256(JSON.stringify(data)).toString();
   }

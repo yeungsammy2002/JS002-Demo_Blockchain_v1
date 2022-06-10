@@ -53,7 +53,7 @@ class Tx {
     return tx;
   }
 
-  static verifyTx(tx) {
+  static isValidTx(tx) {
     const outputTotal = tx.outputs.reduce((accum, o) => accum + o.amount, 0);
     const isValidInOut = tx.input.amount === outputTotal ? true : false;
 

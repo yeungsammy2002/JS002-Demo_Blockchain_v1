@@ -22,7 +22,7 @@ class TxPool {
 
   getValidTxs() {
     return this.pool.filter((t) => {
-      if (!Tx.verifyTx(t)) return;
+      if (!Tx.isValidTx(t)) return;
       return t;
     });
   }

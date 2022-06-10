@@ -1,4 +1,4 @@
-const ChainUtil = require("../chain-util");
+const Util = require("../util");
 
 class Tx {
   constructor() {
@@ -12,28 +12,28 @@ class Tx {
       timestamp: Date.now(),
       address: senderW.pubKey,
       amount: senderW.bal,
-      signature: senderW.wallet.sign(ChainUtil.hash(outputs)),
+      signature: senderW.wallet.sign(Util.hash(outputs)),
     };
   }
 
   static newTx(senderW, recip, amount) {
     const tx = new this();
 
+    tx.txid = Util.genTxid();
     // generate TXID
-    tx.txid = ChainUtil.genTxid();
 
-    // create outputs
     if (senderW.bal < amount) {
-      console.log("Insuffient balance.");
+      console.log("Insufficient balance.");
       return;
     }
     tx.outputs = [
+      // create outputs
       { address: senderW.pubKey, amount: senderW.bal - amount },
       { address: recip, amount },
     ];
 
-    // create input and sign transaction
     tx.input = Tx.newInput(senderW, tx.outputs);
+    // create input and sign transaction
 
     return tx;
   }
@@ -43,7 +43,7 @@ class Tx {
       (o) => o.address === this.input.address
     );
     if (this.outputs[senderIdx].amount < amount) {
-      console.log("Insuffient balance.");
+      console.log("Insufficient balance.");
       return;
     }
     this.outputs[senderIdx].amount -= amount;

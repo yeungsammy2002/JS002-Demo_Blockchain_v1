@@ -1,10 +1,9 @@
 const express = require("express");
 
-const TxPool = require("../wallet/tx-pool");
-const Wallet = require("../wallet");
+const TxPool = require("../transaction/tx-pool");
+const Wallet = require("../transaction/wallet");
 
 const { HTTP_PORT } = require("../config");
-const { redirect } = require("express/lib/response");
 
 const app = express();
 
@@ -18,7 +17,6 @@ app.get("/transactions", (req, res) => {
 });
 
 app.post("/transact", (req, res) => {
-  // console.log(req.body.recip, req.body.amount);
   wallet.createTx(req.body.recip, req.body.amount, txPool);
   res.redirect("/transactions");
 });

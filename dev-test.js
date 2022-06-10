@@ -33,10 +33,13 @@ wallet.createTx("recipient888888", 88, txPool);
 // const VALID_SGN = wallet.wallet.sign(Util.hash(txPool.pool[0].outputs));
 // txPool.pool[0].input.sgn = VALID_SGN;
 
-// const INVALID_SGN = wallet.wallet.sign(Util.hash(fakeTx.outputs));
-// txPool.pool[0].input.sgn = INVALID_SGN;
+const INVALID_SGN = wallet.wallet.sign(Util.hash(fakeTx.outputs));
+txPool.pool[0].input.sgn = INVALID_SGN;
 
 // console.log(txPool.pool[0].input.sgn);
+
+const wallet2 = new Wallet();
+wallet2.createTx("recipient666666", 66, txPool);
 
 const validTxs = txPool.getValidTxs();
 

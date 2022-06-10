@@ -17,8 +17,6 @@ const fakeTx = Tx.newTx(wallet, "recipient123456", 99);
 // tx.input.sgn = fakeSgn;
 // console.log(tx);
 
-// console.log(Tx.verifyTx(tx));
-
 const txPool = new TxPool();
 // tp.addTx(tx);
 
@@ -31,22 +29,17 @@ wallet.createTx("recipient888888", 88, txPool);
 // const VALID_OUT = 800;
 // txPool.pool[0].outputs[0].amount = VALID_OUT;
 
-// const INVALID_OUT = 801
+// const INVALID_OUT = 801;
 // txPool.pool[0].outputs[0].amount = INVALID_OUT;
 
 // const VALID_SGN = wallet.wallet.sign(Util.hash(txPool.pool[0].outputs));
-// txPool.pool[0].input.sgn = VALID_SGN
+// txPool.pool[0].input.sgn = VALID_SGN;
 
 // const INVALID_SGN = wallet.wallet.sign(Util.hash(fakeTx.outputs));
 // txPool.pool[0].input.sgn = INVALID_SGN;
 
 // console.log(txPool.pool[0].input.sgn);
 
-// console.log(Tx.verifyTx(txPool.pool[0]));
-// console.log();
-
 const validTxs = txPool.getValidTxs();
 
-// console.log(validTxs);
-
-// console.log(Tx.verifyTx(tx));
+console.log(validTxs);

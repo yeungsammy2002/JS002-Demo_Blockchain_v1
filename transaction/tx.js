@@ -56,15 +56,14 @@ class Tx {
   static isValidTx(tx) {
     const outputTotal = tx.outputs.reduce((accum, o) => accum + o.amount, 0);
     const isValidInOut = tx.input.amount === outputTotal ? true : false;
+    if (!isValidInOut)
+      console.log(`Invalid transaction from ${tx.input.address}`);
 
     const isValidSgn = Util.verifySgn(
       tx.input.address,
       Util.hash(tx.outputs),
       tx.input.sgn
     );
-
-    if (!isValidInOut)
-      console.log(`Invalid transaction from ${tx.input.address}`);
     if (!isValidSgn) console.log(`Invalid signature from ${tx.input.address}`);
 
     if (isValidInOut && isValidSgn) return true;

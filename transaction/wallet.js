@@ -5,8 +5,8 @@ const { INIT_BAL } = require("../config");
 class Wallet {
   constructor() {
     this.bal = INIT_BAL;
-    this.wallet = Util.genKeyPair();
-    this.pubKey = this.wallet.getPublic().encode("hex");
+    this.keyPair = Util.genKeyPair();
+    this.pubKey = this.keyPair.getPublic().encode("hex");
   }
 
   toString() {

@@ -1,4 +1,5 @@
 const Util = require("../util");
+const { MINING_REWARD } = require("../config");
 
 class Tx {
   constructor() {
@@ -7,7 +8,7 @@ class Tx {
     this.outputs = [];
   }
 
-  update(senderW, recip, amount) {
+  update(wallet, recip, amount) {
     const senderIdx = this.outputs.findIndex(
       (o) => o.address === this.input.address
     );
@@ -17,37 +18,37 @@ class Tx {
     }
     this.outputs[senderIdx].amount -= amount;
     this.outputs.push({ address: recip, amount });
-    this.input = Tx.newInput(senderW, this.outputs);
+    this.input = Tx.newInput(wallet, this.outputs);
 
     return this;
   }
 
-  static newInput(senderW, outputs) {
+  static newInput(wallet, outputs) {
     return {
       timestamp: Date.now(),
-      address: senderW.pubKey,
-      amount: senderW.bal,
-      sgn: senderW.wallet.sign(Util.hash(outputs)),
+      address: wallet.pubKey,
+      amount: wallet.bal,
+      sgn: wallet.keyPair.sign(Util.hash(outputs)),
     };
   }
 
-  static newTx(senderW, recip, amount) {
+  static newTx(wallet, recip, amount) {
     const tx = new this();
 
     tx.txid = Util.genTxid();
     // generate TXID
 
-    if (senderW.bal < amount) {
+    if (wallet.bal < amount) {
       console.log("Insufficient balance.");
       return;
     }
     tx.outputs = [
       // create outputs
-      { address: senderW.pubKey, amount: senderW.bal - amount },
+      { address: wallet.pubKey, amount: wallet.bal - amount },
       { address: recip, amount },
     ];
 
-    tx.input = Tx.newInput(senderW, tx.outputs);
+    tx.input = Tx.newInput(wallet, tx.outputs);
     // create input and sign transaction
 
     return tx;
@@ -68,6 +69,19 @@ class Tx {
 
     if (isValidInOut && isValidSgn) return true;
     else return false;
+  }
+
+  static miningRewardTx(wallet) {
+    const tx = new this();
+    tx.txid = Util.genTxid();
+    tx.input = {
+      timestamp: Date.now(),
+      address: "mining-reward",
+      amount: MINING_REWARD,
+      sgn: "-",
+    };
+    tx.outputs = [{ address: wallet.pubKey, amount: MINING_REWARD }];
+    return tx;
   }
 }
 

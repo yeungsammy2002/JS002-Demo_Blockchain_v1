@@ -3,12 +3,12 @@ const Tx = require("./transaction/tx");
 const TxPool = require("./transaction/tx-pool");
 const Util = require("./util");
 
-const wallet = new Wallet();
+// const wallet = new Wallet();
 
-const tx = Tx.newTx(wallet, "recipient123456", 77);
-const fakeTx = Tx.newTx(wallet, "recipient123456", 99);
+// const tx = Tx.newTx(wallet, "recipient123456", 77);
+// const fakeTx = Tx.newTx(wallet, "recipient123456", 99);
 // console.log(fakeTx.outputs);
-// const fakeSgn = wallet.wallet.sign(Util.hash(fakeTx.outputs));
+// const fakeSgn = wallet.keyPair.sign(Util.hash(fakeTx.outputs));
 // console.log(fakeSgn);
 // console.log(tx.input.sgn);
 // tx.input.amount = 900;
@@ -16,10 +16,10 @@ const fakeTx = Tx.newTx(wallet, "recipient123456", 99);
 // tx.input.sgn = fakeSgn;
 // console.log(tx);
 
-const txPool = new TxPool();
+// const txPool = new TxPool();
 // tp.addTx(tx);
 
-wallet.createTx("recipient888888", 88, txPool);
+// wallet.createTx("recipient888888", 88, txPool);
 // wallet.createTx("recipient888888", 66, txPool);
 
 // console.log(txPool.pool);
@@ -30,17 +30,21 @@ wallet.createTx("recipient888888", 88, txPool);
 // const INVALID_OUT = 801;
 // txPool.pool[0].outputs[0].amount = INVALID_OUT;
 
-// const VALID_SGN = wallet.wallet.sign(Util.hash(txPool.pool[0].outputs));
+// const VALID_SGN = wallet.keypair.sign(Util.hash(txPool.pool[0].outputs));
 // txPool.pool[0].input.sgn = VALID_SGN;
 
-const INVALID_SGN = wallet.wallet.sign(Util.hash(fakeTx.outputs));
-txPool.pool[0].input.sgn = INVALID_SGN;
+// const INVALID_SGN = wallet.keypair.sign(Util.hash(fakeTx.outputs));
+// txPool.pool[0].input.sgn = INVALID_SGN;
 
 // console.log(txPool.pool[0].input.sgn);
 
-const wallet2 = new Wallet();
-wallet2.createTx("recipient666666", 66, txPool);
+// const wallet2 = new Wallet();
+// wallet2.createTx("recipient666666", 66, txPool);
 
-const validTxs = txPool.getValidTxs();
+// const validTxs = txPool.getValidTxs();
 
-console.log(validTxs);
+// console.log(validTxs);
+
+// const Miner = require("./blockchain/miner");
+// const miner = new Miner(txPool, wallet);
+// miner.mine();

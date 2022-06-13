@@ -127,9 +127,17 @@
 // console.log(block);
 
 // Test Bc - addBlock()
-const Wallet = require("./transaction/wallet");
 const TxPool = require("./transaction/tx-pool");
 const Miner = require("./blockchain/miner");
-const wallet = new Wallet();
+const Block = require("./blockchain/block");
+const Bc = require("./blockchain/bc");
 const txPool = new TxPool();
 const miner = new Miner(txPool, "miner123456");
+const bc = new Bc();
+for (let i = 0; i < 100; ++i) {
+  console.log(bc.chain[i]);
+  const block = Block.genBlock(miner, bc.chain[i]);
+  //   console.log(block.difficulty, block.hash);
+  //   console.log(block);
+  bc.addBlock(block);
+}

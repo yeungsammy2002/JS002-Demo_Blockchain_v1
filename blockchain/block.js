@@ -4,7 +4,7 @@ const Util = require("../util");
 
 class Block {
   constructor(timestamp, lastHash, difficulty, nonce, txs, hash) {
-    this.timestampe = timestamp;
+    this.timestamp = timestamp;
     this.lastHash = lastHash;
     this.difficulty = difficulty;
     this.nonce = nonce;

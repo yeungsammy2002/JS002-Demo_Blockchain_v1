@@ -3,6 +3,7 @@ const express = require("express");
 const TxPool = require("../transaction/tx-pool");
 const Wallet = require("../transaction/wallet");
 const Miner = require("../blockchain/miner");
+const Block = require("../blockchain/block");
 
 const { HTTP_PORT } = require("../config");
 
@@ -15,7 +16,7 @@ const wallet = new Wallet();
 const miner = new Miner(txPool, wallet);
 
 app.get("/transactions", (req, res) => {
-  return res.json(txPool.pool);
+  res.json(txPool.pool);
 });
 
 app.post("/transact", (req, res) => {
@@ -24,9 +25,11 @@ app.post("/transact", (req, res) => {
 });
 
 app.get("/mine", (req, res) => {
-  return res.json(miner.mine());
+  const genesisBlock = Block.newGenesis();
+  wallet.createTx("recipient123456", 888, txPool);
+  res.json(miner.mine("miner123456", genesisBlock));
 });
 
 app.listen(HTTP_PORT, () => {
-  console.log(`Server listening on Port: ${HTTP_PORT}`);
+  console.log(`Server listening on port ${HTTP_PORT}...`);
 });

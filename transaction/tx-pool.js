@@ -4,27 +4,22 @@ class TxPool {
   constructor() {
     this.pool = [];
   }
-
-  addTx(wallet, recip, amount) {
+  addTx(recip, amount, wallet) {
     const idx = this.pool.findIndex((t) => t.input.address === wallet.pubKey);
     if (idx < 0) {
       if (wallet.bal < amount) {
-        // checking required to avoid push "null" into pool
         console.log("Insufficient balance.");
         return;
       }
-      this.pool.push(Tx.newTx(wallet, recip, amount));
-    } else {
-      this.pool[idx].update(wallet, recip, amount);
-      // .update() is defined in "Tx" module
-    }
+      this.pool.push(Tx.newTx(recip, amount, wallet));
+    } else this.pool[idx].update(recip, amount, wallet);
   }
-
-  getValidTxs() {
-    return this.pool.filter((t) => {
+  getValidTxs(recip) {
+    const validTxs = this.pool.filter((t) => {
       if (Tx.isValidTx(t)) return t;
       return;
     });
+    return [Tx.genesisTx(recip), ...validTxs];
   }
 }
 

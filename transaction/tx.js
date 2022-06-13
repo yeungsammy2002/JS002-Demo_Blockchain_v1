@@ -1,4 +1,5 @@
 const Util = require("../util");
+
 const { MINING_REWARD } = require("../config");
 
 class Tx {
@@ -7,10 +8,9 @@ class Tx {
     this.input = null;
     this.outputs = [];
   }
-
-  update(wallet, recip, amount) {
+  update(recip, amount, wallet) {
     const senderIdx = this.outputs.findIndex(
-      (o) => o.address === this.input.address
+      (o) => o.address === wallet.pubKey
     );
     if (this.outputs[senderIdx].amount < amount) {
       console.log("Insufficient balance.");
@@ -18,70 +18,62 @@ class Tx {
     }
     this.outputs[senderIdx].amount -= amount;
     this.outputs.push({ address: recip, amount });
-    this.input = Tx.newInput(wallet, this.outputs);
-
+    this.input = wallet.keyPair.sign(Util.hash(this.outputs)).toDER("hex");
     return this;
   }
-
-  static newInput(wallet, outputs) {
+  static newInput(outputs, wallet) {
     return {
       timestamp: Date.now(),
       address: wallet.pubKey,
       amount: wallet.bal,
-      sgn: wallet.keyPair.sign(Util.hash(outputs)),
+      sgn: wallet.keyPair.sign(Util.hash(outputs)).toDER("hex"),
     };
   }
-
-  static newTx(wallet, recip, amount) {
-    const tx = new this();
-
-    tx.txid = Util.genTxid();
-    // generate TXID
-
+  static newTx(recip, amount, wallet) {
     if (wallet.bal < amount) {
       console.log("Insufficient balance.");
       return;
     }
+    const tx = new this();
+    tx.txid = Util.genTxid();
     tx.outputs = [
-      // create outputs
       { address: wallet.pubKey, amount: wallet.bal - amount },
       { address: recip, amount },
     ];
-
-    tx.input = Tx.newInput(wallet, tx.outputs);
-    // create input and sign transaction
-
+    tx.input = Tx.newInput(tx.outputs, wallet);
     return tx;
   }
-
+  static genesisTx(recip) {
+    const tx = new this();
+    tx.txid = Util.genTxid();
+    tx.input = {
+      timestamp: Date.now(),
+      address: "genesis-transaction",
+      amount: MINING_REWARD,
+      sgn: "-",
+    };
+    tx.outputs = [{ address: recip, amount: MINING_REWARD }];
+    return tx;
+  }
   static isValidTx(tx) {
     const outputTotal = tx.outputs.reduce((accum, o) => accum + o.amount, 0);
-    const isValidInOut = tx.input.amount === outputTotal ? true : false;
-    if (!isValidInOut)
-      console.log(`Invalid transaction from ${tx.input.address}`);
+    const isValidAmount = outputTotal === tx.input.amount ? true : false;
+    if (!isValidAmount)
+      console.log(
+        `Invalid transaction, input amount does not match output amounts. Sender address: ${tx.input.address}`
+      );
 
     const isValidSgn = Util.verifySgn(
       tx.input.address,
       Util.hash(tx.outputs),
       tx.input.sgn
     );
-    if (!isValidSgn) console.log(`Invalid signature from ${tx.input.address}`);
-
-    if (isValidInOut && isValidSgn) return true;
+    if (!isValidSgn)
+      console.log(
+        `Invalid transaction, invalid Signature. Sender address: ${tx.input.address}`
+      );
+    if (isValidAmount && isValidSgn) return true;
     else return false;
-  }
-
-  static miningRewardTx(wallet) {
-    const tx = new this();
-    tx.txid = Util.genTxid();
-    tx.input = {
-      timestamp: Date.now(),
-      address: "mining-reward",
-      amount: MINING_REWARD,
-      sgn: "-",
-    };
-    tx.outputs = [{ address: wallet.pubKey, amount: MINING_REWARD }];
-    return tx;
   }
 }
 

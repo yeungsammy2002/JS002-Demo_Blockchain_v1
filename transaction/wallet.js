@@ -8,15 +8,8 @@ class Wallet {
     this.keyPair = Util.genKeyPair();
     this.pubKey = this.keyPair.getPublic().encode("hex");
   }
-
-  toString() {
-    return `Wallet -
-        Public Address: ${this.pubKey.toString()}
-        Balance       : ${this.bal}`;
-  }
-
   createTx(recip, amount, txPool) {
-    txPool.addTx(this, recip, amount);
+    txPool.addTx(recip, amount, this);
   }
 }
 

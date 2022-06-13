@@ -1,5 +1,7 @@
+const INIT_BAL = 8888;
+const MINING_REWARD = 88;
+const DIFFICULTY = 4;
+const BLOCK_TIME = 4000;
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
-const INIT_BAL = 888;
-const MINING_REWARD = 50;
 
-module.exports = { HTTP_PORT, INIT_BAL, MINING_REWARD };
+module.exports = { INIT_BAL, MINING_REWARD, DIFFICULTY, BLOCK_TIME, HTTP_PORT };

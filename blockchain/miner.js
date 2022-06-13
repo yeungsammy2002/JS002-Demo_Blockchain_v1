@@ -3,16 +3,16 @@ const Util = require("../util");
 const { BLOCK_TIME } = require("../config");
 
 class Miner {
-  constructor(txPool, wallet) {
+  constructor(txPool, recip) {
     this.txPool = txPool;
-    this.wallet = wallet;
+    this.recip = recip;
   }
-  mine(recip, lastBlock) {
+  mine(lastBlock) {
     let timestamp = 0;
     const lastHash = lastBlock.hash;
     let difficulty = 0;
     let nonce = 0;
-    const txs = this.txPool.getValidTxs(recip);
+    const txs = this.txPool.getValidTxs(this.recip);
     let hash = "";
 
     do {

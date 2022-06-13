@@ -13,7 +13,7 @@ app.use(express.json());
 
 const txPool = new TxPool();
 const wallet = new Wallet();
-const miner = new Miner(txPool, wallet);
+const miner = new Miner(txPool, "miner123456");
 
 app.get("/transactions", (req, res) => {
   res.json(txPool.pool);
@@ -26,8 +26,8 @@ app.post("/transact", (req, res) => {
 
 app.get("/mine", (req, res) => {
   const genesisBlock = Block.newGenesis();
-  wallet.createTx("recipient123456", 888, txPool);
-  res.json(miner.mine("miner123456", genesisBlock));
+  wallet.createTx("recipient123456", 1234, txPool);
+  res.json(miner.mine(genesisBlock));
 });
 
 app.listen(HTTP_PORT, () => {

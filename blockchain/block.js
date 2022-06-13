@@ -22,11 +22,9 @@ class Block {
     );
     return new this(timestamp, lastHash, difficulty, nonce, txs, hash);
   }
-  static genBlock(miner, recip, lastBlock) {
-    const { timestamp, lastHash, difficulty, nonce, txs, hash } = miner.mine(
-      recip,
-      lastBlock
-    );
+  static genBlock(miner, lastBlock) {
+    const { timestamp, lastHash, difficulty, nonce, txs, hash } =
+      miner.mine(lastBlock);
     return new this(timestamp, lastHash, difficulty, nonce, txs, hash);
   }
 }

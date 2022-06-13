@@ -116,12 +116,20 @@
 // const Block = require("./blockchain/block");
 // const genesisBlock = Block.newGenesis();
 // const Miner = require("./blockchain/miner");
-// const miner = new Miner(txPool, wallet);
+// const miner = new Miner(txPool, "miner123456");
 //
 // test Miner - mine()
-// const package = miner.mine("miner123456", genesisBlock);
+// const package = miner.mine(genesisBlock);
 // console.log(package);
 //
 // test Block - genBlock()
-// const block = Block.genBlock(miner, "miner1213456", genesisBlock);
+// const block = Block.genBlock(miner, genesisBlock);
 // console.log(block);
+
+// Test Bc - addBlock()
+const Wallet = require("./transaction/wallet");
+const TxPool = require("./transaction/tx-pool");
+const Miner = require("./blockchain/miner");
+const wallet = new Wallet();
+const txPool = new TxPool();
+const miner = new Miner(txPool, "miner123456");

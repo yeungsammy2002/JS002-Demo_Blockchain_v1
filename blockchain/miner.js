@@ -1,6 +1,6 @@
 const Util = require("../util");
 
-const { BLOCK_TIME } = require("../config");
+const { BLOCK_TIME, BLOCK_TIME_TOL } = require("../config");
 
 class Miner {
   constructor(txPool, recip) {
@@ -21,15 +21,17 @@ class Miner {
       difficulty = Miner.adjustDiff(lastBlock, timestamp);
       hash = Util.hash(`${timestamp}${lastHash}${difficulty}${nonce}${txs}`);
     } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
-    console.log(difficulty);
-    console.log(timestamp - lastBlock.timestamp);
+    // console.log(difficulty);
+    // console.log(timestamp - lastBlock.timestamp);
     return { timestamp, lastHash, difficulty, nonce, txs, hash };
   }
   static adjustDiff(lastBlock, timestamp) {
     let difficulty = lastBlock.difficulty;
     const block_time = timestamp - lastBlock.timestamp;
-    if (block_time < BLOCK_TIME - 1000) difficulty = lastBlock.difficulty + 1;
-    if (block_time > BLOCK_TIME + 1000) difficulty = lastBlock.difficulty - 1;
+    if (block_time < BLOCK_TIME - BLOCK_TIME_TOL)
+      difficulty = lastBlock.difficulty + 1;
+    if (block_time > BLOCK_TIME + BLOCK_TIME_TOL)
+      difficulty = lastBlock.difficulty - 1;
     return difficulty;
   }
 }

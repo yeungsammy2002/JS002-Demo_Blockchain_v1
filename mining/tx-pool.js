@@ -1,4 +1,4 @@
-const Tx = require("./tx");
+const Tx = require("../transaction/tx");
 
 class TxPool {
   constructor() {
@@ -14,12 +14,12 @@ class TxPool {
       this.pool.push(Tx.newTx(recip, amount, wallet));
     } else this.pool[idx].update(recip, amount, wallet);
   }
-  getValidTxs(recip) {
+  getValidTxs(miner) {
     const validTxs = this.pool.filter((t) => {
       if (Tx.isValidTx(t)) return t;
       return;
     });
-    return [Tx.genesisTx(recip), ...validTxs];
+    return [Tx.genesis(miner), ...validTxs];
   }
 }
 

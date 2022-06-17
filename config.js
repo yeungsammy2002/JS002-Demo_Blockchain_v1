@@ -1,9 +1,10 @@
 const INIT_BAL = 8888;
 const MINING_REWARD = 88;
 const DIFFICULTY = 4;
-const BLOCK_TIME = 4000;
-const BLOCK_TIME_TOL = 500;
-const HTTP_PORT = process.env.HTTP_PORT || 3001;
+const BLOCK_TIME = 5000;
+const BLOCK_TIME_TOL = 1000;
+const P2P_PORT = process.env.P2P_PORT || 5001;
+const PEERS = process.env.PEERS;
 
 module.exports = {
   INIT_BAL,
@@ -11,5 +12,6 @@ module.exports = {
   DIFFICULTY,
   BLOCK_TIME,
   BLOCK_TIME_TOL,
-  HTTP_PORT,
+  P2P_PORT,
+  PEERS,
 };

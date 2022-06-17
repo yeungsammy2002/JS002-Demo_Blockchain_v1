@@ -1,35 +1,19 @@
-const express = require("express");
-
-const TxPool = require("../transaction/tx-pool");
+const P2pNode = require("./p2p-node.js");
+const Bc = require("../blockchain/bc");
 const Wallet = require("../transaction/wallet");
-const Miner = require("../blockchain/miner");
-const Block = require("../blockchain/block");
+const Miner = require("../mining/miner");
+const TxPool = require("../mining/tx-pool");
 
-const { HTTP_PORT } = require("../config");
-
-const app = express();
-
-app.use(express.json());
-
-const txPool = new TxPool();
 const wallet = new Wallet();
-const miner = new Miner(txPool, "miner123456");
+const bc = new Bc();
+const p2pNode = new P2pNode(bc);
+const txPool = new TxPool();
 
-app.get("/transactions", (req, res) => {
-  res.json(txPool.pool);
-});
+for (let i = 0; i < 5; ++i) {
+  wallet.createTx("recipient888", 888, txPool);
+  const block = Miner.mineBlock(bc.chain[i], txPool.getValidTxs("miner88"));
+  bc.addBlock(block);
+  txPool.pool = [];
+}
 
-app.post("/transact", (req, res) => {
-  wallet.createTx(req.body.recip, req.body.amount, txPool);
-  res.redirect("/transactions");
-});
-
-app.get("/mine", (req, res) => {
-  const genesisBlock = Block.newGenesis();
-  wallet.createTx("recipient123456", 1234, txPool);
-  res.json(miner.mine(genesisBlock));
-});
-
-app.listen(HTTP_PORT, () => {
-  console.log(`Server listening on port ${HTTP_PORT}...`);
-});
+p2pNode.listen();

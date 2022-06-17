@@ -10,7 +10,7 @@ class Tx {
   }
   update(recip, amount, wallet) {
     const senderIdx = this.outputs.findIndex(
-      (o) => o.address === wallet.pubKey
+      (o) => o.address === this.input.address
     );
     if (this.outputs[senderIdx].amount < amount) {
       console.log("Insufficient balance.");
@@ -18,7 +18,7 @@ class Tx {
     }
     this.outputs[senderIdx].amount -= amount;
     this.outputs.push({ address: recip, amount });
-    this.input = wallet.keyPair.sign(Util.hash(this.outputs)).toDER("hex");
+    this.input = Tx.newInput(this.outputs, wallet);
     return this;
   }
   static newInput(outputs, wallet) {
@@ -43,36 +43,37 @@ class Tx {
     tx.input = Tx.newInput(tx.outputs, wallet);
     return tx;
   }
-  static genesisTx(recip) {
-    const tx = new this();
+  static genesis(miner) {
+    const tx = new Tx();
     tx.txid = Util.genTxid();
+    tx.outputs = [{ address: miner, amount: MINING_REWARD }];
     tx.input = {
       timestamp: Date.now(),
       address: "genesis-transaction",
       amount: MINING_REWARD,
       sgn: "-",
     };
-    tx.outputs = [{ address: recip, amount: MINING_REWARD }];
     return tx;
   }
   static isValidTx(tx) {
     const outputTotal = tx.outputs.reduce((accum, o) => accum + o.amount, 0);
-    const isValidAmount = outputTotal === tx.input.amount ? true : false;
-    if (!isValidAmount)
+    const isValidAmounts = outputTotal === tx.input.amount ? true : false;
+    if (!isValidAmounts) {
       console.log(
-        `Invalid transaction, input amount does not match output amounts. Sender address: ${tx.input.address}`
+        `Invalid transaction, amount(s) invalid. Sender address ${tx.input.address}`
       );
-
+    }
     const isValidSgn = Util.verifySgn(
       tx.input.address,
       Util.hash(tx.outputs),
       tx.input.sgn
     );
-    if (!isValidSgn)
+    if (!isValidSgn) {
       console.log(
-        `Invalid transaction, invalid Signature. Sender address: ${tx.input.address}`
+        `Invalid transaction, signature invalid. Sender address ${tx.input.address}`
       );
-    if (isValidAmount && isValidSgn) return true;
+    }
+    if (isValidAmounts && isValidSgn) return true;
     else return false;
   }
 }
